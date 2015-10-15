@@ -148,11 +148,6 @@ class Rooftop_Content_Fields_Public {
     }
 
     function add_menu_children_to_menus($menus) {
-//        foreach($menus as $menu){
-//            $wp_menu_items = ;
-//            $f = 1;
-//            $menu[]
-//        }
 
         $_this = $this;
         $menus = array_map(function($menu_item) use ($_this) {
