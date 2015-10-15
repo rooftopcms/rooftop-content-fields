@@ -146,4 +146,134 @@ class Rooftop_Content_Fields_Public {
 
         return $terms;
     }
+
+    function add_menu_children_to_menus($menus) {
+//        foreach($menus as $menu){
+//            $wp_menu_items = ;
+//            $f = 1;
+//            $menu[]
+//        }
+
+        $_this = $this;
+        $menus = array_map(function($menu_item) use ($_this) {
+            $wp_menu_items = wp_get_nav_menu_items($menu_item['ID']);
+            $rest_menu_items = [];
+            foreach( $wp_menu_items as $item_object ) {
+                $rest_menu_items[] = $_this->format_menu_item( $item_object );
+            }
+
+            $rest_menu_items = $this->nested_menu_items($rest_menu_items, 0);
+
+            $menu_item['items'] = $rest_menu_items;
+            return $menu_item;
+        }, $menus);
+
+        return $menus;
+    }
+
+
+    /**
+     * Format a menu item for REST API consumption.
+     *
+     * @param   object|array    $menu_item  the menu item
+     * @param   bool            $children   get menu item children (default false)
+     * @param   array           $menu       the menu the item belongs to (used when $children is set to true)
+     *
+     * @return  array   a formatted menu item for REST
+     */
+    private function format_menu_item($menu_item, $children = false, $menu = array()) {
+        $item = (array) $menu_item;
+        $menu_item = array(
+            'ID'       => abs( $item['ID'] ),
+            'order'    => (int) $item['menu_order'],
+            'parent'   => abs( $item['menu_item_parent'] ),
+            'title'    => $item['title'],
+            'url'      => $item['url'],
+            'attr'     => $item['attr_title'],
+            'target'   => $item['target'],
+            'classes'  => implode( ' ', $item['classes'] ),
+            'xfn'      => $item['xfn'],
+            'description' => $item['description'],
+            'object_id' => abs( $item['object_id'] ),
+            'object'   => $item['object'],
+            'type'     => $item['type'],
+            'type_label' => $item['type_label'],
+        );
+
+        if ( $children === true && ! empty( $menu ) ) {
+            $menu_item['children'] = $this->get_nav_menu_item_children( $item['ID'], $menu );
+        }
+
+        return apply_filters( 'rest_menus_format_menu_item', $menu_item );
+    }
+
+    /**
+     * Returns all child nav_menu_items under a specific parent.
+     *
+     * @param   int     $parent_id      the parent nav_menu_item ID
+     * @param   array   $nav_menu_items navigation menu items
+     * @param   bool    $depth          gives all children or direct children only
+     *
+     * @return  array   returns filtered array of nav_menu_items
+     */
+    private function get_nav_menu_item_children( $parent_id, $nav_menu_items, $depth = true ) {
+        $nav_menu_item_list = array();
+
+        foreach ( (array) $nav_menu_items as $nav_menu_item ) {
+            if ( $nav_menu_item->menu_item_parent == $parent_id ) {
+                $nav_menu_item_list[] = $this->format_menu_item( $nav_menu_item, true, $nav_menu_items );
+                if ( $depth ) {
+                    if ( $children = $this->get_nav_menu_item_children( $nav_menu_item->ID, $nav_menu_items ) ) {
+                        $nav_menu_item_list = array_merge( $nav_menu_item_list, $children );
+                    }
+                }
+            }
+        }
+
+        return $nav_menu_item_list;
+    }
+
+    /**
+     *
+     * Given a flat array of menu items, split them into parent/child items and
+     * recurse over them to return children nexted in their parent
+     *
+     * @param $menu_items
+     * @param null $parent
+     * @return array
+     */
+    private function nested_menu_items( &$menu_items, $parent = null ) {
+        $parents = array();
+        $children = array();
+
+        // separate menu_items into parents & children
+        array_map(function($i) use ( $parent, &$children, &$parents ){
+            if($i['ID'] != $parent && $i['parent'] == $parent) {
+                $parents[] = $i;
+            }else {
+                $children[] = $i;
+            }
+        }, $menu_items);
+
+        foreach($parents as &$parent) {
+            if($this->has_children( $children, $parent['ID'] ) ) {
+                $parent['children'] = $this->nested_menu_items( $children, $parent['ID'] );
+            }
+        }
+
+        return $parents;
+    }
+
+    /**
+     * Does a collection of menu items contain an item that is the parent id of 'id'
+     *
+     * @param $items
+     * @param $id
+     * @return array
+     */
+    private function has_children ( $items, $id ){
+        return array_filter($items, function( $i ) use ( $id ) {
+            return $i['parent'] == $id;
+        });
+    }
 }
