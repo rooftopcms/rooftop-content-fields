@@ -1,5 +1,5 @@
 {
-    "name": "rooftopcms/rooftop-acf-exposer",
+    "name": "rooftopcms/rooftop-content-fields",
     "description": "Include the additional fields in a response",
     "license": "GPL-3.0",
     "authors": [
@@ -16,6 +16,5 @@
     ],
     "type": "wordpress-muplugin",
     "require": {
-        "wpackagist-plugin/advanced-custom-fields": "4.4.3"
     }
 }
