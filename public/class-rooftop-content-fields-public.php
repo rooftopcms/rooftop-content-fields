@@ -113,7 +113,7 @@ class Rooftop_Content_Fields_Public {
         ));
 
         foreach($types as $key => $type) {
-            register_api_field( $type,
+            register_rest_field( $type,
                 'taxonomies',
                 array(
                     'get_callback'    => array( $this, 'add_taxonomies' ),
