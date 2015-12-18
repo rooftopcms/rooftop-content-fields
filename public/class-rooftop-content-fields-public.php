@@ -103,7 +103,7 @@ class Rooftop_Content_Fields_Public {
     /**
      *
      * Called by rest_api_init hook
-     * Use register_api_field to add a field to the response, with a
+     * Use register_rest_field to add a field to the response, with a
      * value populated by the given callback method (get_callback).
      *
      */
