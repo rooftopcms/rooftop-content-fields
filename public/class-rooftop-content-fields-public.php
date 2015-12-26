@@ -195,6 +195,31 @@ class Rooftop_Content_Fields_Public {
             'type_label' => $item['type_label'],
         );
 
+        if ($item['type'] == 'post_type') {
+            $post = get_post($item['object_id']);
+            # For posts, get ancestors as a comma-delimited string
+            $ancestors = get_ancestors($post->ID, $post->post_type);
+            $menu_item['object_ancestor_ids'] = implode(array_reverse($ancestors));
+
+            # Add the object slug
+            $menu_item['object_slug'] = $post->post_name;
+
+            # Add the object path if it's nested
+            $ancestorCount = count($ancestors);
+            if ($ancestorCount > 0) {
+                $pathData = explode("/",$item['url']);
+                array_pop($pathData);#we pop here because there is a trailing slash which generates a blank element
+                $ancestorSlugs = array_slice($pathData, -$ancestorCount-1,-1);
+                $menu_item['object_ancestor_slugs'] = implode(",",$ancestorSlugs);
+            }
+
+            # Remove the url - it's useless in Rooftop because we don't know the URL structure of the
+            # client application
+            unset($menu_item['url']);
+
+
+        }
+
         if ( $children === true && ! empty( $menu ) ) {
             $menu_item['children'] = $this->get_nav_menu_item_children( $item['ID'], $menu );
         }
