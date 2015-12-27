@@ -173,6 +173,7 @@ class Rooftop_Content_Fields {
 
         $this->loader->add_action( 'rest_api_init', $plugin_public, 'add_fields' );
         $this->loader->add_filter( 'rest_menus_format_menus', $plugin_public, 'add_menu_children_to_menus', 50, 1 );
+        $this->loader->add_filter( 'rest_menus_format_menu', $plugin_public, 'add_menu_children_to_menu', 50, 1 );
 
 	}
 

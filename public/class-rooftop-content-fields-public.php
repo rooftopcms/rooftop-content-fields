@@ -166,6 +166,22 @@ class Rooftop_Content_Fields_Public {
         return $menus;
     }
 
+    function add_menu_children_to_menu($menu_item) {
+
+        $_this = $this;
+        $wp_menu_items = wp_get_nav_menu_items($menu_item['ID']);
+        $rest_menu_items = [];
+        foreach( $wp_menu_items as $item_object ) {
+            $rest_menu_items[] = $_this->format_menu_item( $item_object );
+        }
+
+        $rest_menu_items = $this->nested_menu_items($rest_menu_items, 0);
+
+        $menu_item['items'] = $rest_menu_items;
+        return $menu_item;
+
+    }
+
 
     /**
      * Format a menu item for REST API consumption.
