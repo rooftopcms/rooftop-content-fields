@@ -151,7 +151,7 @@ class Rooftop_Content_Fields_Public {
 
         $_this = $this;
         $menus = array_map(function($menu_item) use ($_this) {
-            $wp_menu_items = wp_get_nav_menu_items($menu_item['ID']);
+            $wp_menu_items = wp_get_nav_menu_items($menu_item['id']);
             $rest_menu_items = [];
             foreach( $wp_menu_items as $item_object ) {
                 $rest_menu_items[] = $_this->format_menu_item( $item_object );
@@ -169,7 +169,7 @@ class Rooftop_Content_Fields_Public {
     function add_menu_children_to_menu($menu_item) {
 
         $_this = $this;
-        $wp_menu_items = wp_get_nav_menu_items($menu_item['ID']);
+        $wp_menu_items = wp_get_nav_menu_items($menu_item['id']);
         $rest_menu_items = [];
         foreach( $wp_menu_items as $item_object ) {
             $rest_menu_items[] = $_this->format_menu_item( $item_object );
@@ -195,7 +195,7 @@ class Rooftop_Content_Fields_Public {
     private function format_menu_item($menu_item, $children = false, $menu = array()) {
         $item = (array) $menu_item;
         $menu_item = array(
-            'ID'       => abs( $item['ID'] ),
+            'id'       => abs( $item['ID'] ),
             'order'    => (int) $item['menu_order'],
             'parent'   => abs( $item['menu_item_parent'] ),
             'title'    => $item['title'],
@@ -284,7 +284,7 @@ class Rooftop_Content_Fields_Public {
 
         // separate menu_items into parents & children
         array_map(function($i) use ( $parent, &$children, &$parents ){
-            if($i['ID'] != $parent && $i['parent'] == $parent) {
+            if($i['id'] != $parent && $i['parent'] == $parent) {
                 $parents[] = $i;
             }else {
                 $children[] = $i;
@@ -292,8 +292,8 @@ class Rooftop_Content_Fields_Public {
         }, $menu_items);
 
         foreach($parents as &$parent) {
-            if($this->has_children( $children, $parent['ID'] ) ) {
-                $parent['children'] = $this->nested_menu_items( $children, $parent['ID'] );
+            if($this->has_children( $children, $parent['id'] ) ) {
+                $parent['children'] = $this->nested_menu_items( $children, $parent['id'] );
             }
         }
 
