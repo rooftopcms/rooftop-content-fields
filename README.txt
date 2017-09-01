@@ -2,7 +2,7 @@
 Contributors: rooftopcms
 Tags: rooftop, api, headless, content
 Requires at least: 4.3
-Tested up to: 4.3
+Tested up to: 4.8.1
 Stable tag: 4.3
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -11,7 +11,8 @@ rooftop-content-fields presents additional content in an API response. This incl
 
 == Description ==
 
-rooftop-content-fields presents additional content in an API response. This includes menus, menu items and taxonomy terms. We use this plugin as a place to expose additional content, so might add more in the future.
+rooftop-content-fields presents additional content in an API response. This includes menus, menu items and taxonomy terms.
+We use this plugin as a place to expose additional content, so might add more in the future.
 
 Track progress, raise issues and contribute at http://github.com/rooftopcms/rooftop-content-fields
 
@@ -33,8 +34,12 @@ Yes, it's a Wordpress plugin you're welcome to use outside the context of Roofto
 
 == Changelog ==
 
-= 0.0.1 =
-* Initial release
+= 1.2.1 =
+* Updated readme for packaging
+
+= 1.2.0 =
+* Add children to menus when calling a specific menu endpoint
+* Add more fields to menu responses
 
 == What's Rooftop CMS? ==
 
